@@ -1,0 +1,51 @@
+service: serverless-headers-extractor
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-2
+  timeout: 100
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:getObject
+      Resource: arn:aws:s3:::trained-transformer-models-store/sentence_transformer_model_for_word_similariy_originally_fine_tuned_on_google_queries.tar.gz
+
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    zip: true
+    slim: true
+    strip: false
+    noDeploy:
+      - docutils
+      - jmespath
+      - pip
+      - python-dateutil
+      - setuptools
+      - six
+      - tensorboard
+    useStaticCache: true
+    useDownloadCache: true
+    cacheLocation: "./cache"
+    
+    
+package:
+ exclude:
+   - "**/*"
+ include:
+   - _sentence_transformer/**/*
+   - handler.py
+ 
+functions:
+  predict_answer:
+    handler: handler.predict_answer
+    memorySize: 5000
+    timeout: 900
+    events:
+      - http: ANY /
+      - http: ANY {proxy+}
+
+plugins:
+  - serverless-python-requirements
