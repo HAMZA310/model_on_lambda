@@ -13,13 +13,9 @@ class TopHeaders():
         file_prefix
         ):
 
-        # TO DO: Put them in env vars.
-        AWS_ACCESS_KEY_ID="AKIAVID4H4VY7H76RD66"
-        AWS_SECRET_ACCESS_KEY="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"
+
         self.s3_client = boto3.client(
-            's3',
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+            's3'
             )
 
         self.model_path = model_path
